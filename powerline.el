@@ -583,10 +583,7 @@ Leave RESERVE space on the right."
     (add-hook 'focus-out-hook 'powerline-unset-selected-window)))
 
 ;; Executes after the window manager requests that the user's events
-;; be directed to a different frame.
-(defadvice handle-switch-frame (after powerline-handle-switch-frame activate)
-  "Call `powerline-set-selected-window'."
-  (powerline-set-selected-window))
+(add-hook 'window-selection-change-functions #'powerline-set-selected-window)
 
 (add-hook 'buffer-list-update-hook #'powerline-set-selected-window)
 
