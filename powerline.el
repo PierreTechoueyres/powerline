@@ -1,4 +1,4 @@
-;;; powerline.el --- Rewrite of Powerline
+;;; powerline.el --- Rewrite of Powerline -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2012-2013 Donald Ephraim Curtis
 ;; Copyright (C) 2013 Jason Milkins
@@ -69,7 +69,7 @@
 
 (defface mode-line-buffer-id-inactive
   '((t (:inherit mode-line-buffer-id)))
-  "Powerline mode-line face"
+  "Powerline mode-line face."
   :group 'powerline)
 
 (defcustom powerline-default-separator 'arrow
@@ -99,12 +99,12 @@ slant, utf-8."
                  (const nil)))
 
 (defcustom powerline-utf-8-separator-left #xe0b0
-  "The unicode character number for the left facing separator"
+  "The unicode character number for the left facing separator."
   :group 'powerline
   :type  '(choice integer (const nil)))
 
 (defcustom powerline-utf-8-separator-right #xe0b2
-  "The unicode character number for the right facing separator"
+  "The unicode character number for the right facing separator."
   :group 'powerline
   :type  '(choice integer (const nil)))
 
@@ -164,7 +164,7 @@ Create one if the frame doesn't have one yet."
     table))
 
 (defun powerline-current-separator ()
-  "Get the current default separator. Always returns utf-8 in non-gui mode."
+  "Get the current default separator. Always return utf-8 in non-gui mode."
   (if window-system
       powerline-default-separator
     'utf-8))
@@ -299,7 +299,7 @@ static char * %s[] = {
      'xpm t :scale 1 :ascent 'center)))
 
 (defun pl/percent-xpm
-    (height pmax pmin winend winstart width color1 color2)
+    (height pmax _pmin winend winstart width color1 color2)
   "Generate percentage xpm of HEIGHT for PMAX to PMIN given WINEND and WINSTART.
 Use WIDTH and COLOR1 and COLOR2."
   (let* ((height- (1- height))

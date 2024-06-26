@@ -1,4 +1,4 @@
-;;; powerline-separators.el --- Separators for Powerline
+;;; powerline-separators.el --- Separators for Powerline  ;; -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2012-2013 Donald Ephraim Curtis
 ;; Copyright (C) 2013 Jason Milkins
@@ -631,7 +631,7 @@ and 1."
                       (0 1 1 1 1 1))))
 
 (defmacro pl/nil (dir)
-  "Generate a XPM function that returns nil for DIR."
+  "Generate a XPM function that return nil for DIR."
   `(defun ,(intern (format "powerline-nil-%s" (symbol-name dir)))
        (face1 face2 &optional height)
      nil))

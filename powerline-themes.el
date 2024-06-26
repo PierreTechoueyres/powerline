@@ -1,4 +1,4 @@
-;;; powerline-themes.el --- Themes for Powerline
+;;; powerline-themes.el --- Themes for Powerline ;; -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2012-2013 Donald Ephraim Curtis
 ;; Copyright (C) 2013 Jason Milkins
