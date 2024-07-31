@@ -402,7 +402,7 @@ Use WIDTH and COLOR1 and COLOR2."
   "Render STR as mode-line data using FACE and optionally PAD import.
 PAD can be left (`l') or right (`r')."
   (when str
-    (let* ((rendered-str (format-mode-line str))
+    (let* ((rendered-str (replace-regexp-in-string "%" "%%" (format-mode-line str)))
            (padded-str (concat
                         (when (and (> (length rendered-str) 0) (eq pad 'l)) " ")
                         (if (listp str) rendered-str str)
