@@ -558,7 +558,7 @@ Leave RESERVE space on the right."
 (defvar powerline-selected-window (frame-selected-window)
   "Selected window.")
 
-(defun powerline-set-selected-window ()
+(defun powerline-set-selected-window (&optional _)
   "Set the variable `powerline-selected-window' appropriately."
   (when (not (minibuffer-window-active-p (frame-selected-window)))
     (setq powerline-selected-window (frame-selected-window))
@@ -571,13 +571,16 @@ Leave RESERVE space on the right."
 
 (add-hook 'window-configuration-change-hook 'powerline-set-selected-window)
 
+(defun powerline-toggle-selected-window ()
+  "Toggle `powerline-selected-window' depending on `frame-focus-state'"
+  (if (frame-focus-state)
+      (powerline-set-selected-window)
+    (powerline-unset-selected-window)))
+
 ;; Watch focus changes
 (if (boundp 'after-focus-change-function)
   (add-function :after after-focus-change-function
-		(lambda ()
-                  (if (frame-focus-state)
-                      (powerline-set-selected-window)
-                    (powerline-unset-selected-window))))
+		#'powerline-toggle-selected-window)
   (with-no-warnings
     (add-hook 'focus-in-hook 'powerline-set-selected-window)
     (add-hook 'focus-out-hook 'powerline-unset-selected-window)))
