@@ -560,7 +560,7 @@ Leave RESERVE space on the right."
 
 (defun powerline-set-selected-window (&optional _)
   "Set the variable `powerline-selected-window' appropriately."
-  (when (not (minibuffer-window-active-p (frame-selected-window)))
+  (unless (minibuffer-window-active-p (frame-selected-window))
     (setq powerline-selected-window (frame-selected-window))
     (force-mode-line-update)))
 
