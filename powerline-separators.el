@@ -173,63 +173,71 @@ and 1."
                    (cdr bindings-body) (cdr bindings-body-2x))))
 
 (defun pl/background-color (face)
-  (let ((face face)
-	(fa (assoc face face-remapping-alist)))
-    (when fa
-      (setq face (car (cdr fa))))
-    (face-attribute face
-		    (if (face-attribute face :inverse-video nil 'default)
-			:foreground
-		      :background)
-		    nil
-		    'default)))
+  (face-attribute face
+		  (if (face-attribute face :inverse-video nil 'default)
+		      :foreground
+		    :background)
+		  nil
+		  'default))
 
 (defun pl/wrap-defun (name dir width let-vars body &optional body-2x)
   "Generate a powerline function of NAME in DIR with WIDTH using LET-VARS and BODY."
   (let* ((src-face (if (eq dir 'left) 'face1 'face2))
          (dst-face (if (eq dir 'left) 'face2 'face1)))
-    `(defun ,(intern (format "powerline-%s-%s" name (symbol-name dir)))
-         (face1 face2 &optional height)
-       (when window-system
-         (unless height (setq height (pl/separator-height)))
-         (let* ,(append `((color1 (when ,src-face
-                                    (pl/hex-color (pl/background-color ,src-face))))
-                          (color2 (when ,dst-face
-                                    (pl/hex-color (pl/background-color ,dst-face))))
-                          (colori (when (and color1 color2) (pl/interpolate color1 color2)))
-                          (color1 (or color1 "None"))
-                          (color2 (or color2 "None"))
-                          (colori (or colori "None")))
-                        let-vars)
-           (apply 'create-image
-                  ,(append `(concat (format "/* XPM */ static char * %s_%s[] = { \"%s %s 3 1\", \"0 c %s\", \"1 c %s\", \"2 c %s\","
-                                            ,(replace-regexp-in-string "-" "_" name)
-                                            (symbol-name ',dir)
-                                            ,width
-                                            height
-                                            color1
-                                            color2
-                                            colori))
-                           body
-                           '("};"))
-                  'xpm t
-                  :ascent 'center
-                  :scale 1
-                  :face (when (and face1 face2)
-                          ,dst-face)
-                  ,(and body-2x
-                        `(and (featurep 'mac)
-                              (list :data-2x
-                                    ,(append `(concat (format "/* XPM */ static char * %s_%s_2x[] = { \"%s %s 3 1\", \"0 c %s\", \"1 c %s\", \"2 c %s\","
-                                                              ,(replace-regexp-in-string "-" "_" name)
-                                                              (symbol-name ',dir)
-                                                              (* ,width 2)
-                                                              (* height 2)
-                                                              color1
-                                                              color2
-                                                              colori))
-                                             body-2x
-                                             '("};")))))))))))
+    `(progn
+       (defun ,(intern (format "powerline-%s-%s" name (symbol-name dir)))
+	   (face1 face2 &optional height)
+	 (let ((face1 face1)
+	       (face2 face2)
+	       (fa (assoc face1 face-remapping-alist)))
+	   (when fa
+	     (setq face1 (car (cdr fa))))
+	   (setq fa (assoc face2 face-remapping-alist))
+	   (when fa
+	     (setq face2 (car (cdr fa))))
+	   (,(intern (format "powerline-%s-%s--1" name (symbol-name dir))) face1 face2 height)))
+       (defun ,(intern (format "powerline-%s-%s--1" name (symbol-name dir)))
+           (face1 face2 &optional height)
+         (when window-system
+           (unless height (setq height (pl/separator-height)))
+           (let* ,(append `((color1 (when ,src-face
+                                      (pl/hex-color (pl/background-color ,src-face))))
+                            (color2 (when ,dst-face
+                                      (pl/hex-color (pl/background-color ,dst-face))))
+                            (colori (when (and color1 color2) (pl/interpolate color1 color2)))
+                            (color1 (or color1 "None"))
+                            (color2 (or color2 "None"))
+                            (colori (or colori "None")))
+                          let-vars)
+             (apply 'create-image
+                    ,(append `(concat (format "/* XPM */ static char * %s_%s[] = { \"%s %s 3 1\", \"0 c %s\", \"1 c %s\", \"2 c %s\","
+                                              ,(replace-regexp-in-string "-" "_" name)
+                                              (symbol-name ',dir)
+                                              ,width
+                                              height
+                                              color1
+                                              color2
+                                              colori))
+                             body
+                             '("};"))
+                    'xpm t
+                    :ascent 'center
+                    :scale 1
+                    :face (when (and face1 face2)
+                            ,dst-face)
+                    ,(and body-2x
+                          `(and (featurep 'mac)
+                                (list :data-2x
+                                      ,(append `(concat (format "/* XPM */ static char * %s_%s_2x[] = { \"%s %s 3 1\", \"0 c %s\", \"1 c %s\", \"2 c %s\","
+                                                                ,(replace-regexp-in-string "-" "_" name)
+                                                                (symbol-name ',dir)
+                                                                (* ,width 2)
+                                                                (* height 2)
+                                                                color1
+                                                                color2
+                                                                colori))
+                                               body-2x
+                                               '("};"))))))))))))
 
 (defmacro pl/alternate (dir)
   "Generate an alternating pattern XPM function for DIR."
