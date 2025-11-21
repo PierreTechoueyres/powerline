@@ -422,7 +422,7 @@ PAD can be left (`l') or right (`r')."
   (when (and window-system (eq 'right (get-scroll-bar-mode)))
     (setq reserve (- reserve 3)))
   (propertize " "
-              'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))
+              'display `((space :align-to (- right (+ right-fringe right-margin scroll-bar ,reserve))))
               'face face))
 
 (defun powerline-fill-center (face reserve)
